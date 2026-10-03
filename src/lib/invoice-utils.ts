@@ -54,7 +54,7 @@ export function buildWhatsAppMessage(params: {
     `Total Amount: ₹${params.totalAmount.toLocaleString("en-IN")}`,
     "",
     ...(params.reportUrl
-      ? ["Invoice report link:", params.reportUrl]
+      ? ["Please find the invoice report link:", params.reportUrl]
       : ["Please find the invoice report."]),
     "",
     `Thank you for choosing ${params.shopName}.`,

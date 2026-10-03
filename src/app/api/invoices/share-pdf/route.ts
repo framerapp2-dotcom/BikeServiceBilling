@@ -14,17 +14,11 @@ function makeShareCode() {
   return code;
 }
 
-function customerReportLink(code: string, pdfUrl: string) {
-  const appUrl = (process.env.NEXT_PUBLIC_APP_URL ?? "").replace(/\/$/, "");
-  let host = "";
-  try {
-    host = new URL(appUrl).hostname;
-  } catch {
-    host = "";
-  }
-  const isLocal = !host || host === "localhost" || host === "127.0.0.1";
+function customerReportLink(code: string, pdfUrl: string, requestUrl: string) {
+  const appUrl = new URL(requestUrl);
+  const isLocal = appUrl.hostname === "localhost" || appUrl.hostname === "127.0.0.1";
   if (isLocal) return pdfUrl;
-  return `${appUrl}/bill/${code}`;
+  return new URL(`/bill/${encodeURIComponent(code)}`, appUrl).toString();
 }
 
 export async function POST(request: Request) {
@@ -79,7 +73,11 @@ export async function POST(request: Request) {
     }
 
     const { data } = admin.storage.from(BUCKET).getPublicUrl(path);
-    const url = shareCode ? customerReportLink(shareCode, data.publicUrl) : data.publicUrl;
+    const pdfUrl = new URL(data.publicUrl);
+    pdfUrl.searchParams.set("download", `Bill-${invoiceId}.pdf`);
+    const url = shareCode
+      ? customerReportLink(shareCode, pdfUrl.toString(), request.url)
+      : pdfUrl.toString();
     return NextResponse.json({ url });
   } catch {
     return NextResponse.json({ error: "Unable to share the invoice" }, { status: 401 });

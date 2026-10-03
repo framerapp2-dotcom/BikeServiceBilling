@@ -2,7 +2,7 @@
 
 import type { Invoice, InvoiceItem, Shop } from "@/lib/types";
 import { SHOP_ADDRESS, SHOP_EMAIL, SHOP_NAME, SHOP_PHONE, SHOP_WHATSAPP } from "@/lib/shop";
-import { Bike as BikeIcon, Mail as MailIcon, MapPin as PinIcon, MessageCircle as MessageCircleIcon, Phone as PhoneIcon } from "lucide-react";
+import { Mail as MailIcon } from "lucide-react";
 import { formatDate, formatINRDecimal } from "@/lib/utils";
 
 export function InvoiceDocument({
@@ -23,14 +23,14 @@ export function InvoiceDocument({
         <div className="text-center">
           <h1 className="text-2xl font-bold uppercase tracking-tight">{shop.name || SHOP_NAME}</h1>
           <p className="mt-2 flex items-center justify-center gap-1 text-sm text-slate-700">
-            <PinIcon /> {shop.address || SHOP_ADDRESS}
+            <span aria-hidden="true" className="shrink-0 text-xl leading-none">📍</span> {shop.address || SHOP_ADDRESS}
           </p>
           <p className="mt-1 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm text-slate-700">
-            <span className="inline-flex items-center gap-1"><PhoneIcon /> {shop.phone || SHOP_PHONE}</span>
-            <span className="inline-flex items-center gap-1"><MessageCircleIcon /> WhatsApp: {SHOP_WHATSAPP}</span>
+            <span className="inline-flex items-center gap-1"><span aria-hidden="true" className="shrink-0 text-xl leading-none">📞</span> {shop.phone || SHOP_PHONE}</span>
+            <span className="inline-flex items-center gap-1"><span aria-hidden="true" className="shrink-0 text-xl leading-none">🗨️</span> WhatsApp: {SHOP_WHATSAPP}</span>
           </p>
           <p className="mt-1 flex items-center justify-center gap-1 text-sm text-slate-700">
-            <MailIcon /> {shop.email || SHOP_EMAIL}
+            <MailIcon aria-hidden="true" className="h-5 w-5 shrink-0 text-slate-700" /> {shop.email || SHOP_EMAIL}
           </p>
         </div>
         <div className="mt-4 flex items-center justify-between text-sm">
@@ -127,7 +127,7 @@ export function InvoiceDocument({
       <footer className="mt-10 border-t border-slate-200 pt-6 text-center text-sm text-slate-600">
         <p>Thank you for choosing {shop.name || SHOP_NAME}.</p>
         <p className="mt-2 flex items-center justify-center gap-2 font-medium text-slate-800">
-          Ride Safe! <BikeIcon />
+          Ride Safe! <span aria-hidden="true" className="text-xl leading-none">🏍️</span>
         </p>
       </footer>
     </div>
