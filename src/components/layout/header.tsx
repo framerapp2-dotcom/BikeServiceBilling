@@ -79,10 +79,10 @@ export function Header({
         <form action="/api/auth/logout" method="post">
           <button
             type="submit"
-            className="flex h-10 w-10 items-center justify-center rounded-full text-danger hover:bg-red-50 dark:hover:bg-slate-800"
-            aria-label="Logout"
+            className="flex h-10 items-center justify-center gap-2 rounded-xl px-3 text-sm font-medium text-danger hover:bg-red-50 dark:hover:bg-slate-800"
           >
             <LogOut className="h-5 w-5" />
+            <span>Logout</span>
           </button>
         </form>
       </div>

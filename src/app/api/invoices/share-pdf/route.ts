@@ -14,8 +14,13 @@ function makeShareCode() {
   return code;
 }
 
-function customerReportLink(code: string, pdfUrl: string, requestUrl: string) {
-  const appUrl = new URL(requestUrl);
+function customerReportLink(code: string, pdfUrl: string, request: Request) {
+  const requestUrl = new URL(request.url);
+  const forwardedHost = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
+  const host = forwardedHost || request.headers.get("host") || requestUrl.host;
+  const forwardedProtocol = request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim();
+  const protocol = forwardedProtocol || requestUrl.protocol.replace(":", "");
+  const appUrl = new URL(`${protocol}://${host}`);
   const isLocal = appUrl.hostname === "localhost" || appUrl.hostname === "127.0.0.1";
   if (isLocal) return pdfUrl;
   return new URL(`/bill/${encodeURIComponent(code)}`, appUrl).toString();
@@ -69,15 +74,39 @@ export async function POST(request: Request) {
         .update({ share_code: shareCode })
         .eq("id", invoiceId);
       if (!codeError) break;
+
+      if (codeError.code === "42703") {
+        return NextResponse.json(
+          {
+            error:
+              "Invoice sharing is not enabled in the database. Apply migration 003_invoice_share_code.sql in Supabase, then try again.",
+          },
+          { status: 500 },
+        );
+      }
+
+      if (codeError.code !== "23505") {
+        console.error("Unable to create invoice share code:", codeError.message);
+        return NextResponse.json(
+          { error: "Unable to create an invoice share link. Check the server logs." },
+          { status: 500 },
+        );
+      }
+
       shareCode = "";
+    }
+
+    if (!shareCode) {
+      return NextResponse.json(
+        { error: "The invoice PDF was saved, but its share link could not be created." },
+        { status: 500 },
+      );
     }
 
     const { data } = admin.storage.from(BUCKET).getPublicUrl(path);
     const pdfUrl = new URL(data.publicUrl);
     pdfUrl.searchParams.set("download", `Bill-${invoiceId}.pdf`);
-    const url = shareCode
-      ? customerReportLink(shareCode, pdfUrl.toString(), request.url)
-      : pdfUrl.toString();
+    const url = customerReportLink(shareCode, pdfUrl.toString(), request);
     return NextResponse.json({ url });
   } catch {
     return NextResponse.json({ error: "Unable to share the invoice" }, { status: 401 });

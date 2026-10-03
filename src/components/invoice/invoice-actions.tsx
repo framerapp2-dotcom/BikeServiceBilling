@@ -30,12 +30,48 @@ export function InvoiceActions({
   const buildPdf = async () => {
     const el = document.getElementById("invoice-print-root");
     if (!el) return null;
-    const canvas = await html2canvas(el, { scale: 2, useCORS: true });
-    const img = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "mm", "a4");
-    const w = pdf.internal.pageSize.getWidth();
-    const h = (canvas.height * w) / canvas.width;
-    pdf.addImage(img, "PNG", 0, 0, w, h);
+    const canvas = await html2canvas(el, {
+      backgroundColor: "#ffffff",
+      scale: 2,
+      useCORS: true,
+    });
+    const pdf = new jsPDF({ orientation: "p", unit: "mm", format: "a4", compress: true });
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const pageHeightPixels = Math.floor((canvas.width * pageHeight) / pageWidth);
+    const pageCanvas = document.createElement("canvas");
+    const pageContext = pageCanvas.getContext("2d");
+    if (!pageContext) throw new Error("Unable to prepare the invoice PDF.");
+    pageCanvas.width = canvas.width;
+
+    for (let page = 0, offsetY = 0; offsetY < canvas.height; page += 1) {
+      const sliceHeight = Math.min(pageHeightPixels, canvas.height - offsetY);
+      pageCanvas.height = sliceHeight;
+      pageContext.clearRect(0, 0, pageCanvas.width, pageCanvas.height);
+      pageContext.drawImage(
+        canvas,
+        0,
+        offsetY,
+        canvas.width,
+        sliceHeight,
+        0,
+        0,
+        canvas.width,
+        sliceHeight,
+      );
+      if (page > 0) pdf.addPage();
+      pdf.addImage(
+        pageCanvas.toDataURL("image/jpeg", 0.95),
+        "JPEG",
+        0,
+        0,
+        pageWidth,
+        (sliceHeight * pageWidth) / canvas.width,
+        undefined,
+        "FAST",
+      );
+      offsetY += sliceHeight;
+    }
     return pdf;
   };
 

@@ -58,7 +58,7 @@ export function buildWhatsAppMessage(params: {
       : ["Please find the invoice report."]),
     "",
     `Thank you for choosing ${params.shopName}.`,
-    "Ride Safe! 🏍️",
+    `Ride Safe! ${"\u{1F3CD}"}`,
   );
   return lines.join("\n");
 }

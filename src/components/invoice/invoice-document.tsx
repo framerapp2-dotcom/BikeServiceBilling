@@ -33,12 +33,12 @@ export function InvoiceDocument({
             <MailIcon aria-hidden="true" className="h-5 w-5 shrink-0 text-slate-700" /> {shop.email || SHOP_EMAIL}
           </p>
         </div>
-        <div className="mt-4 flex items-center justify-between text-sm">
-          <p>
-            <span className="font-semibold">Bill Number</span>{" "}
-            <span className="text-lg font-bold">{invoice.invoice_number}</span>
+        <div className="mt-4 grid grid-cols-2 items-center text-sm">
+          <p className="flex items-baseline gap-2">
+            <span className="shrink-0 font-semibold">Bill Number</span>
+            <span className="text-lg font-bold tabular-nums">{invoice.invoice_number}</span>
           </p>
-          <p>
+          <p className="text-right">
             <span className="font-semibold">Date</span> {formatDate(invoice.invoice_date)}
           </p>
         </div>
@@ -127,7 +127,7 @@ export function InvoiceDocument({
       <footer className="mt-10 border-t border-slate-200 pt-6 text-center text-sm text-slate-600">
         <p>Thank you for choosing {shop.name || SHOP_NAME}.</p>
         <p className="mt-2 flex items-center justify-center gap-2 font-medium text-slate-800">
-          Ride Safe! <span aria-hidden="true" className="text-xl leading-none">🏍️</span>
+          Ride Safe! <span aria-hidden="true" className="text-xl leading-none">{"\u{1F3CD}"}</span>
         </p>
       </footer>
     </div>
