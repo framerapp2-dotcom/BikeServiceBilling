@@ -181,7 +181,6 @@ export function SpinningMark({ variant = "default" }: { variant?: "default" | "w
   const wheelRef = useRef<SVGGElement>(null);
 
   useEffect(() => {
-    if (variant === "workshop") return;
     let frame = 0;
     let raf = 0;
     const tick = () => {
@@ -193,7 +192,7 @@ export function SpinningMark({ variant = "default" }: { variant?: "default" | "w
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [variant]);
+  }, []);
 
   return (
     <svg viewBox="0 0 40 40" className="h-10 w-10" aria-hidden>
