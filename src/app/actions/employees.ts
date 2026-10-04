@@ -28,6 +28,32 @@ export async function createEmployee(data: {
   return { success: true };
 }
 
+export async function archiveEmployee(id: string) {
+  const supabase = await createClient();
+  const shopId = await getShopId();
+  const { error } = await supabase
+    .from("employees")
+    .update({ status: "inactive" })
+    .eq("id", id)
+    .eq("shop_id", shopId);
+  if (error) return { error: "Unable to archive employee" };
+  revalidatePath("/app/employees");
+  return { success: true };
+}
+
+export async function restoreEmployee(id: string) {
+  const supabase = await createClient();
+  const shopId = await getShopId();
+  const { error } = await supabase
+    .from("employees")
+    .update({ status: "active" })
+    .eq("id", id)
+    .eq("shop_id", shopId);
+  if (error) return { error: "Unable to restore employee" };
+  revalidatePath("/app/employees");
+  return { success: true };
+}
+
 export async function recordSalary(data: {
   employee_id: string;
   salary_month: string;

@@ -2,7 +2,6 @@ import { SHOP_NAME } from "@/lib/shop";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ToastProvider } from "@/components/providers/toast-provider";
 
 const poppins = Poppins({
@@ -30,9 +29,7 @@ export default function RootLayout({
               "try{var t=localStorage.getItem('rg-theme')==='dark'?'dark':'light';document.documentElement.classList.remove('light','dark');document.documentElement.classList.add(t);}catch(e){}",
           }}
         />
-        <ThemeProvider>
-          <ToastProvider>{children}</ToastProvider>
-        </ThemeProvider>
+        <ToastProvider>{children}</ToastProvider>
       </body>
     </html>
   );

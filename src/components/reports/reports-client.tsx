@@ -5,13 +5,29 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import type { MonthlyReport } from "@/lib/data/reports";
 import { formatINR } from "@/lib/utils";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  Cell,
+  Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+} from "recharts";
 import { Download, Printer } from "lucide-react";
 import { useState } from "react";
 
 export function ReportsClient({ initial }: { initial: MonthlyReport }) {
   const [report, setReport] = useState(initial);
-  const { revenue, invoiceCount, expenseTotal, salaryTotal, profit, expenseByCategory, month } = report;
+  const {
+    revenue,
+    invoiceCount,
+    expenseTotal,
+    salaryTotal,
+    profit,
+    expenseByCategory,
+    paymentByMethod,
+    month,
+  } = report;
   const avg = invoiceCount ? revenue / invoiceCount : 0;
   const monthLabel = new Date(`${month}-01T00:00:00`).toLocaleDateString("en-IN", {
     month: "long",
@@ -72,19 +88,80 @@ export function ReportsClient({ initial }: { initial: MonthlyReport }) {
         <Card><p className="text-sm text-foreground-muted">Expenses</p><p className="text-2xl font-bold text-warning">{formatINR(expenseTotal)}</p></Card>
         <Card><p className="text-sm text-foreground-muted">Profit</p><p className="text-2xl font-bold text-secondary">{formatINR(profit)}</p></Card>
       </div>
-      <Card>
-        <h3 className="font-semibold mb-4">Expense Categories</h3>
-        <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={expenseByCategory}>
-              <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-              <YAxis />
-              <Tooltip formatter={(v: number) => formatINR(v)} />
-              <Bar dataKey="value" fill="#F59E0B" radius={[6, 6, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </Card>
+      <div className="grid gap-4 lg:grid-cols-2">
+        <Card>
+          <h3 className="mb-4 font-semibold">Expense Categories</h3>
+          {expenseByCategory.some((item) => item.value > 0) ? (
+            <div className="h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={expenseByCategory.filter((item) => item.value > 0)}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="45%"
+                    outerRadius={82}
+                    label={({ name, percent }) =>
+                      `${name} ${((percent ?? 0) * 100).toFixed(0)}%`
+                    }
+                  >
+                    {expenseByCategory
+                      .filter((item) => item.value > 0)
+                      .map((item, index) => (
+                        <Cell
+                          key={item.name}
+                          fill={["#ea580c", "#f59e0b", "#16a34a", "#2563eb", "#9333ea"][index % 5]}
+                        />
+                      ))}
+                  </Pie>
+                  <Tooltip formatter={(value: number) => formatINR(value)} />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <p className="py-16 text-center text-sm text-foreground-muted">
+              No expenses recorded for this month.
+            </p>
+          )}
+        </Card>
+        <Card>
+          <h3 className="mb-4 font-semibold">Payments by Type</h3>
+          {paymentByMethod.length > 0 ? (
+            <div className="h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={paymentByMethod}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="45%"
+                    outerRadius={82}
+                    label={({ name, percent }) =>
+                      `${name} ${((percent ?? 0) * 100).toFixed(0)}%`
+                    }
+                  >
+                    {paymentByMethod.map((item) => (
+                      <Cell
+                        key={item.name}
+                        fill={item.name === "Cash" ? "#16a34a" : "#2563eb"}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(value: number) => formatINR(value)} />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <p className="py-16 text-center text-sm text-foreground-muted">
+              No Cash or UPI payments recorded for this month.
+            </p>
+          )}
+        </Card>
+      </div>
       <Card>
         <p className="text-sm text-foreground-muted">Employee salaries ({monthLabel})</p>
         <p className="text-xl font-bold text-accent">{formatINR(salaryTotal)}</p>

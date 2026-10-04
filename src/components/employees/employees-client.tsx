@@ -1,6 +1,11 @@
 "use client";
 
-import { createEmployee, recordSalary } from "@/app/actions/employees";
+import {
+  archiveEmployee,
+  createEmployee,
+  recordSalary,
+  restoreEmployee,
+} from "@/app/actions/employees";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,10 +17,12 @@ import { useState } from "react";
 
 export function EmployeesClient({
   employees,
+  archivedEmployees,
   salaries,
   salaryMonth,
 }: {
   employees: { id: string; name: string; role: string; monthly_salary: number; phone: string | null }[];
+  archivedEmployees: { id: string; name: string; role: string; monthly_salary: number; phone: string | null }[];
   salaries: { employee_id: string; net_salary: number; payment_status: string }[];
   salaryMonth: string;
 }) {
@@ -56,6 +63,25 @@ export function EmployeesClient({
     }
   };
 
+  const archive = async (employee: { id: string; name: string }) => {
+    if (!confirm(`Archive ${employee.name}? Their salary history will be preserved.`)) return;
+    const res = await archiveEmployee(employee.id);
+    if (res.error) toast(res.error, "error");
+    else {
+      toast("Employee archived");
+      window.location.reload();
+    }
+  };
+
+  const restore = async (employee: { id: string; name: string }) => {
+    const res = await restoreEmployee(employee.id);
+    if (res.error) toast(res.error, "error");
+    else {
+      toast("Employee restored");
+      window.location.reload();
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between">
@@ -78,10 +104,36 @@ export function EmployeesClient({
                   Record salary (paid)
                 </Button>
               )}
+              <Button
+                size="sm"
+                variant="ghost"
+                className="mt-3 text-danger"
+                onClick={() => archive(e)}
+              >
+                Archive
+              </Button>
             </Card>
           );
         })}
       </div>
+      {archivedEmployees.length > 0 && (
+        <section className="space-y-3">
+          <h3 className="text-lg font-semibold dark:text-slate-100">Archived employees</h3>
+          <div className="grid gap-4 lg:grid-cols-2">
+            {archivedEmployees.map((employee) => (
+              <Card key={employee.id} className="flex items-center justify-between gap-4">
+                <div>
+                  <h4 className="font-semibold">{employee.name}</h4>
+                  <p className="text-sm capitalize text-foreground-muted">{employee.role}</p>
+                </div>
+                <Button size="sm" variant="outline" onClick={() => restore(employee)}>
+                  Restore
+                </Button>
+              </Card>
+            ))}
+          </div>
+        </section>
+      )}
       <Modal open={open} onClose={() => setOpen(false)} title="Add Employee">
         <div className="space-y-3">
           <Input label="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />

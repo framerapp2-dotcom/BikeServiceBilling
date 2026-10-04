@@ -21,7 +21,7 @@ export function StatCard({
   const change =
     previousValue !== undefined ? percentChange(value, previousValue) : null;
   const accentBg = {
-    primary: "bg-primary/10 text-primary",
+    primary: "bg-orange-50 text-orange-700 dark:bg-orange-950/40 dark:text-orange-300",
     secondary: "bg-secondary/10 text-secondary",
     accent: "bg-accent/10 text-accent",
     warning: "bg-warning/10 text-warning",

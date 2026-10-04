@@ -30,6 +30,10 @@ export function InvoiceActions({
   const buildPdf = async () => {
     const el = document.getElementById("invoice-print-root");
     if (!el) return null;
+    await document.fonts.ready;
+    await Promise.all(
+      Array.from(el.querySelectorAll("img")).map((image) => image.decode()),
+    );
     const canvas = await html2canvas(el, {
       backgroundColor: "#ffffff",
       scale: 2,

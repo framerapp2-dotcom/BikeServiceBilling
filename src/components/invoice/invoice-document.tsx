@@ -2,7 +2,6 @@
 
 import type { Invoice, InvoiceItem, Shop } from "@/lib/types";
 import { SHOP_ADDRESS, SHOP_EMAIL, SHOP_NAME, SHOP_PHONE, SHOP_WHATSAPP } from "@/lib/shop";
-import { Bike, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { formatDate, formatINRDecimal } from "@/lib/utils";
 
 export function InvoiceDocument({
@@ -22,24 +21,19 @@ export function InvoiceDocument({
       <header className="border-b border-slate-200 pb-6">
         <div className="text-center">
           <h1 className="text-2xl font-bold uppercase tracking-tight">{shop.name || SHOP_NAME}</h1>
-          <p className="mt-2 flex items-start justify-center gap-2 text-sm text-slate-700">
-            <MapPin aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-rose-600" />
-            <span>{shop.address || SHOP_ADDRESS}</span>
-          </p>
-          <div className="mt-1 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-slate-700">
-            <span className="inline-flex items-center gap-1.5">
-              <Phone aria-hidden="true" className="h-4 w-4 shrink-0 text-emerald-600" />
+          <div className="mt-2 text-sm leading-5 text-slate-700">
+            <p className="text-center">
+              {shop.address || SHOP_ADDRESS}
+            </p>
+            <p className="mt-1 text-center">
               {shop.phone || SHOP_PHONE}
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <MessageCircle aria-hidden="true" className="h-4 w-4 shrink-0 text-green-600" />
+              <span className="mx-2">|</span>
               WhatsApp: {SHOP_WHATSAPP}
-            </span>
+            </p>
+            <p className="mt-1 text-center">
+              {shop.email || SHOP_EMAIL}
+            </p>
           </div>
-          <p className="mt-1 flex items-center justify-center gap-1.5 text-sm text-slate-700">
-            <Mail aria-hidden="true" className="h-4 w-4 shrink-0 text-blue-600" />
-            <span>{shop.email || SHOP_EMAIL}</span>
-          </p>
         </div>
         <div className="mt-4 grid grid-cols-2 items-center text-sm">
           <p className="flex items-baseline gap-2">
@@ -134,8 +128,8 @@ export function InvoiceDocument({
 
       <footer className="mt-10 border-t border-slate-200 pt-6 text-center text-sm text-slate-600">
         <p>Thank you for choosing {shop.name || SHOP_NAME}.</p>
-        <p className="mt-2 flex items-center justify-center gap-2 font-medium text-slate-800">
-          Ride Safe! <Bike aria-hidden="true" className="h-5 w-5 shrink-0 text-primary" />
+        <p className="mt-2 text-center font-medium text-slate-800">
+          Ride Safe!
         </p>
       </footer>
     </div>

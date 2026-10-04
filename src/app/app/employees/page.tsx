@@ -15,7 +15,16 @@ export default async function EmployeesPage() {
       .eq("shop_id", shopId)
       .eq("salary_month", month),
   ]);
-  const employees = employeesRes.data;
+  const employees = employeesRes.data ?? [];
+  const activeEmployees = employees.filter((employee) => employee.status !== "inactive");
+  const archivedEmployees = employees.filter((employee) => employee.status === "inactive");
   const salaries = salariesRes.data;
-  return <EmployeesClient employees={employees ?? []} salaries={salaries ?? []} salaryMonth={month} />;
+  return (
+    <EmployeesClient
+      employees={activeEmployees}
+      archivedEmployees={archivedEmployees}
+      salaries={salaries ?? []}
+      salaryMonth={month}
+    />
+  );
 }

@@ -58,7 +58,7 @@ export function Sidebar({
       >
         <div className="flex items-center justify-between gap-2 border-b border-slate-200 px-4 py-4 dark:border-slate-700">
           <Link href="/app/dashboard" className="flex min-w-0 items-center gap-2">
-            <SpinningMark />
+            <SpinningMark variant="workshop" />
             <div className="min-w-0">
               <p className="line-clamp-2 text-[11px] font-semibold leading-tight">{shopName}</p>
               <p className="text-[10px] text-slate-500">Management</p>

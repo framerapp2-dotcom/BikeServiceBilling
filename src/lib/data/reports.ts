@@ -9,6 +9,7 @@ export type MonthlyReport = {
   salaryTotal: number;
   profit: number;
   expenseByCategory: { name: string; value: number }[];
+  paymentByMethod: { name: string; value: number }[];
 };
 
 export async function getMonthlyReport(shopId: string, yearMonth: string): Promise<MonthlyReport> {
@@ -17,7 +18,7 @@ export async function getMonthlyReport(shopId: string, yearMonth: string): Promi
   const [invoicesRes, expensesRes, salariesRes] = await Promise.all([
     supabase
       .from("invoices")
-      .select("total_amount")
+      .select("total_amount, amount_paid, payment_method")
       .eq("shop_id", shopId)
       .gte("invoice_date", start)
       .lte("invoice_date", end),
@@ -42,7 +43,17 @@ export async function getMonthlyReport(shopId: string, yearMonth: string): Promi
   const salaryTotal = salaries.reduce((sum, row) => sum + Number(row.net_salary), 0);
   const byCategory: Record<string, number> = {};
   expenses.forEach((row) => {
-    byCategory[row.category] = (byCategory[row.category] ?? 0) + Number(row.amount);
+    const category = row.category?.trim() || "Uncategorized";
+    byCategory[category] = (byCategory[category] ?? 0) + Number(row.amount);
+  });
+  const byPaymentMethod: Record<"Cash" | "UPI", number> = {
+    Cash: 0,
+    UPI: 0,
+  };
+  invoicesRes.data?.forEach((row) => {
+    const method = row.payment_method?.toLowerCase();
+    if (method === "cash") byPaymentMethod.Cash += Number(row.amount_paid ?? 0);
+    if (method === "upi") byPaymentMethod.UPI += Number(row.amount_paid ?? 0);
   });
 
   return {
@@ -53,5 +64,8 @@ export async function getMonthlyReport(shopId: string, yearMonth: string): Promi
     salaryTotal,
     profit: revenue - expenseTotal - salaryTotal,
     expenseByCategory: Object.entries(byCategory).map(([name, value]) => ({ name, value })),
+    paymentByMethod: Object.entries(byPaymentMethod)
+      .map(([name, value]) => ({ name, value }))
+      .filter((item) => item.value > 0),
   };
 }

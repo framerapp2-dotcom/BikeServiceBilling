@@ -30,7 +30,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-const PIE_COLORS = ["#2563EB", "#10B981"];
+const PIE_COLORS = ["#ea580c", "#10b981"];
 
 export function DashboardClient({
   stats,
@@ -132,15 +132,15 @@ export function DashboardClient({
           </div>
         </div>
         <div className="mb-4 grid gap-4 sm:grid-cols-3">
-          <div className="rounded-xl bg-blue-50 p-4 dark:bg-slate-800">
+          <div className="rounded-xl border border-orange-100 bg-orange-50 p-4 dark:border-orange-900/40 dark:bg-orange-950/20">
             <p className="text-sm text-slate-600 dark:text-slate-300">Daily revenue</p>
-            <p className="text-2xl font-bold text-primary">{formatINR(revenue.daily)}</p>
+            <p className="text-2xl font-bold text-orange-700 dark:text-orange-300">{formatINR(revenue.daily)}</p>
           </div>
-          <div className="rounded-xl bg-emerald-50 p-4 dark:bg-slate-800">
+          <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-4 dark:border-emerald-900/40 dark:bg-emerald-950/20">
             <p className="text-sm text-slate-600 dark:text-slate-300">Weekly revenue</p>
             <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-400">{formatINR(revenue.weekly)}</p>
           </div>
-          <div className="rounded-xl bg-slate-100 p-4 dark:bg-slate-800">
+          <div className="rounded-xl border border-slate-200 bg-slate-100 p-4 dark:border-slate-700 dark:bg-slate-800">
             <p className="text-sm text-slate-600 dark:text-slate-300">{monthLabel} revenue</p>
             <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">{formatINR(revenue.monthly)}</p>
           </div>
@@ -149,14 +149,14 @@ export function DashboardClient({
           <div className="h-64 lg:col-span-2">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={revenue.week}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#64748b" strokeOpacity={0.35} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#94a3b8" strokeOpacity={0.3} />
                 <XAxis dataKey="day" tick={{ fontSize: 12, fill: "#94a3b8" }} />
                 <YAxis tick={{ fontSize: 12, fill: "#94a3b8" }} />
                 <Tooltip
                   formatter={(v: number) => formatINR(v)}
                   contentStyle={{ background: "#1e293b", border: "none", borderRadius: 12, color: "#f8fafc" }}
                 />
-                <Bar dataKey="revenue" fill="#2563EB" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="revenue" fill="#ea580c" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
