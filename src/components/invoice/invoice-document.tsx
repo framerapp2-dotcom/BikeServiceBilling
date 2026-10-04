@@ -22,15 +22,23 @@ export function InvoiceDocument({
       <header className="border-b border-slate-200 pb-6">
         <div className="text-center">
           <h1 className="text-2xl font-bold uppercase tracking-tight">{shop.name || SHOP_NAME}</h1>
-          <p className="mt-2 flex items-center justify-center gap-1 text-sm text-slate-700">
-            <span aria-hidden="true" className="shrink-0 text-xl leading-none">📍</span> {shop.address || SHOP_ADDRESS}
+          <p className="mt-2 flex items-start justify-center gap-2 text-sm text-slate-700">
+            <span aria-hidden="true" className="flex h-5 w-5 shrink-0 items-center justify-center text-base leading-none">📍</span>
+            <span>{shop.address || SHOP_ADDRESS}</span>
           </p>
-          <p className="mt-1 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm text-slate-700">
-            <span className="inline-flex items-center gap-1"><span aria-hidden="true" className="shrink-0 text-xl leading-none">📞</span> {shop.phone || SHOP_PHONE}</span>
-            <span className="inline-flex items-center gap-1"><span aria-hidden="true" className="shrink-0 text-xl leading-none">🗨️</span> WhatsApp: {SHOP_WHATSAPP}</span>
-          </p>
-          <p className="mt-1 flex items-center justify-center gap-1 text-sm text-slate-700">
-            <MailIcon aria-hidden="true" className="h-5 w-5 shrink-0 text-slate-700" /> {shop.email || SHOP_EMAIL}
+          <div className="mt-1 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-slate-700">
+            <span className="inline-flex items-center gap-1.5">
+              <span aria-hidden="true" className="flex h-5 w-5 shrink-0 items-center justify-center text-base leading-none">📞</span>
+              {shop.phone || SHOP_PHONE}
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span aria-hidden="true" className="flex h-5 w-5 shrink-0 items-center justify-center text-base leading-none">🗨️</span>
+              WhatsApp: {SHOP_WHATSAPP}
+            </span>
+          </div>
+          <p className="mt-1 flex items-center justify-center gap-1.5 text-sm text-slate-700">
+            <MailIcon aria-hidden="true" className="h-4 w-4 shrink-0 text-slate-700" />
+            <span>{shop.email || SHOP_EMAIL}</span>
           </p>
         </div>
         <div className="mt-4 grid grid-cols-2 items-center text-sm">

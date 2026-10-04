@@ -177,10 +177,11 @@ export function BikeScene() {
   );
 }
 
-export function SpinningMark() {
+export function SpinningMark({ variant = "default" }: { variant?: "default" | "workshop" }) {
   const wheelRef = useRef<SVGGElement>(null);
 
   useEffect(() => {
+    if (variant === "workshop") return;
     let frame = 0;
     let raf = 0;
     const tick = () => {
@@ -192,11 +193,11 @@ export function SpinningMark() {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [variant]);
 
   return (
     <svg viewBox="0 0 40 40" className="h-10 w-10" aria-hidden>
-      <rect width="40" height="40" rx="12" fill="#2563EB" />
+      <rect width="40" height="40" rx="12" fill={variant === "workshop" ? "#ea580c" : "#2563EB"} />
       <g ref={wheelRef}>
         <circle cx="20" cy="20" r="11" fill="none" stroke="white" strokeWidth="2.5" />
         <circle cx="20" cy="20" r="2.5" fill="#fbbf24" />

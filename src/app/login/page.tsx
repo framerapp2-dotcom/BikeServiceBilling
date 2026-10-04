@@ -5,7 +5,7 @@ import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/client";
-import { LOGIN_ID, resolveLoginEmail, SHOP_NAME } from "@/lib/shop";
+import { resolveLoginEmail, SHOP_NAME } from "@/lib/shop";
 import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -53,11 +53,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative flex min-h-screen">
+    <div className="relative flex min-h-screen bg-[#f7f7f4]">
       <div className="absolute right-4 top-4 z-20">
         <ThemeToggle />
       </div>
-      <div className="relative hidden w-1/2 lg:block">
+      <div className="relative hidden w-1/2 overflow-hidden bg-slate-950 lg:block">
         <Image
           src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=1400&q=80"
           alt="Motorcycle on the road"
@@ -65,26 +65,33 @@ export default function LoginPage() {
           sizes="(min-width: 1024px) 50vw, 100vw"
           className="object-cover"
         />
-        <div className="absolute inset-x-8 bottom-10 rounded-2xl bg-white/95 p-6 text-slate-900 shadow-card">
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/10 to-orange-950/20" />
+        <div className="absolute inset-x-8 bottom-10 rounded-2xl border border-white/15 bg-slate-950/75 p-6 text-white shadow-2xl backdrop-blur-sm">
           <div className="flex items-center gap-3">
-            <SpinningMark />
+            <SpinningMark variant="workshop" />
             <span className="text-sm font-semibold leading-tight">{SHOP_NAME}</span>
           </div>
-          <p className="mt-4 text-base font-medium text-slate-700">
-            Professional billing for your bike service shop — fast, simple, reliable.
+          <p className="mt-5 text-2xl font-bold tracking-tight">
+            Your workshop, running smoothly.
+          </p>
+          <p className="mt-2 text-sm leading-6 text-slate-300">
+            Sign in to manage invoices, customers and inventory.
           </p>
         </div>
       </div>
-      <div className="flex w-full flex-col justify-center px-6 py-12 lg:w-1/2 lg:px-16 bg-background-light dark:bg-background-dark">
-        <div className="mx-auto w-full max-w-md">
+      <div className="flex w-full flex-col justify-center px-5 py-12 sm:px-8 lg:w-1/2 lg:px-16">
+        <div className="mx-auto w-full max-w-md rounded-3xl border border-slate-200 bg-white p-6 shadow-xl shadow-slate-900/5 sm:p-9">
           <div className="mb-8 flex items-center gap-2 lg:hidden">
-            <SpinningMark />
+            <SpinningMark variant="workshop" />
             <span className="text-sm font-semibold leading-tight">{SHOP_NAME}</span>
           </div>
-          <h1 className="text-2xl font-bold text-foreground dark:text-slate-100">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-orange-700">
+            Workshop management
+          </p>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">
             Welcome back
           </h1>
-          <p className="mt-2 text-foreground-muted">Sign in to manage your shop</p>
+          <p className="mt-2 text-sm text-slate-600">Sign in to manage your shop.</p>
           <form onSubmit={handleSubmit} className="mt-8 space-y-4">
             <Input
               label="Login ID"
@@ -92,7 +99,6 @@ export default function LoginPage() {
               autoComplete="username"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={LOGIN_ID}
             />
             <div className="relative">
               <Input
@@ -128,7 +134,7 @@ export default function LoginPage() {
             {error && (
               <p className="text-sm text-danger" role="alert">{error}</p>
             )}
-            <Button type="submit" className="w-full" size="lg" loading={loading}>
+            <Button type="submit" className="w-full bg-orange-600 hover:bg-orange-700" size="lg" loading={loading}>
               Login
             </Button>
           </form>

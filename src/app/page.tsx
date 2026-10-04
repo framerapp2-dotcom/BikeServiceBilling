@@ -59,7 +59,7 @@ export default function LandingPage() {
       <header className="border-b border-slate-200/80 bg-[#f7f7f4]">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
           <a href="#" className="flex min-w-0 items-center gap-3" aria-label={`${SHOP_NAME} home`}>
-            <SpinningMark />
+            <SpinningMark variant="workshop" />
             <span className="max-w-52 text-xs font-bold leading-tight sm:max-w-none sm:text-sm">
               {SHOP_NAME}
             </span>
